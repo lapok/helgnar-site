@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebP Background Test - Helgnar Site</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #ff6b35;
+            text-align: center;
+        }
+        .test-section {
+            margin: 40px 0;
+            padding: 20px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background: #2a2a2a;
+        }
+        .test-item {
+            margin: 20px 0;
+            padding: 15px;
+            background: #333;
+            border-radius: 5px;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        .info { color: #2196F3; }
+        
+        /* Тестовые фоны */
+        .test-bg-1 {
+            width: 300px;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #ff6b35;
+            margin: 10px 0;
+        }
+        
+        .test-bg-2 {
+            width: 300px;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #ff6b35;
+            margin: 10px 0;
+        }
+        
+        .test-bg-3 {
+            width: 300px;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #ff6b35;
+            margin: 10px 0;
+        }
+        
+        /* WebP версии */
+        .webp .test-bg-1 {
+            background-image: url('./assets/images/Фон.webp');
+        }
+        
+        .webp .test-bg-2 {
+            background-image: url('./assets/images/mediaBg.webp');
+        }
+        
+        .webp .test-bg-3 {
+            background-image: url('./assets/images/contactsBg.webp');
+        }
+        
+        /* Fallback версии */
+        .no-webp .test-bg-1 {
+            background-image: url('./assets/images/Фон.png');
+        }
+        
+        .no-webp .test-bg-2 {
+            background-image: url('./assets/images/mediaBg.png');
+        }
+        
+        .no-webp .test-bg-3 {
+            background-image: url('./assets/images/contactsBg.png');
+        }
+        
+        .code {
+            background: #444;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ WebP Background Images Test</h1>
+        
+        <div class="test-section">
+            <h2>📊 WebP Support Detection</h2>
+            <div class="test-item">
+                <strong>WebP Support:</strong> <span id="webp-support">Checking...</span><br>
+                <strong>Browser:</strong> <span id="browser-info"></span><br>
+                <strong>Test Time:</strong> <span id="test-time"></span>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🎨 Background Images Test</h2>
+            <div class="test-item">
+                <h3>Hero Background (Фон.png/webp)</h3>
+                <div class="test-bg-1"></div>
+                <div class="code">CSS: .webp .hero { background-image: url('./assets/images/Фон.webp'); }</div>
+            </div>
+            
+            <div class="test-item">
+                <h3>Media Background (mediaBg.png/webp)</h3>
+                <div class="test-bg-2"></div>
+                <div class="code">CSS: .webp .media { background: #0a0a0a url('./assets/images/mediaBg.webp'); }</div>
+            </div>
+            
+            <div class="test-item">
+                <h3>Contacts Background (contactsBg.png/webp)</h3>
+                <div class="test-bg-3"></div>
+                <div class="code">CSS: .webp .contacts { background: #0a0a0a url('./assets/images/contactsBg.webp'); }</div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔧 Technical Details</h2>
+            <div class="test-item">
+                <strong>Current CSS Classes:</strong> <span id="css-classes"></span><br>
+                <strong>Background Images Loaded:</strong> <span id="bg-loaded"></span><br>
+                <strong>File Sizes:</strong> <span id="file-sizes"></span>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📋 Instructions</h2>
+            <div class="test-item">
+                <h3>To test WebP backgrounds:</h3>
+                <ol>
+                    <li>Run <code>npm run convert-webp</code> to create WebP versions</li>
+                    <li>Check if background images load correctly</li>
+                    <li>Verify WebP support detection works</li>
+                    <li>Test fallback for non-WebP browsers</li>
+                </ol>
+                
+                <h3>Expected Results:</h3>
+                <ul>
+                    <li><span class="success">✅</span> WebP backgrounds load in supported browsers</li>
+                    <li><span class="success">✅</span> PNG fallbacks work in older browsers</li>
+                    <li><span class="success">✅</span> Automatic detection and switching</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // WebP Support Detection
+        function checkWebPSupport() {
+            return new Promise((resolve) => {
+                const webP = new Image();
+                webP.onload = webP.onerror = () => {
+                    resolve(webP.height === 2);
+                };
+                webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
+            });
+        }
+        
+        // Update page info
+        async function updatePageInfo() {
+            const webpSupport = await checkWebPSupport();
+            const browserInfo = navigator.userAgent;
+            const testTime = new Date().toLocaleString();
+            
+            document.getElementById('webp-support').textContent = webpSupport ? '✅ Supported' : '❌ Not Supported';
+            document.getElementById('webp-support').className = webpSupport ? 'success' : 'error';
+            
+            document.getElementById('browser-info').textContent = browserInfo;
+            document.getElementById('test-time').textContent = testTime;
+            
+            // Add appropriate CSS class
+            if (webpSupport) {
+                document.documentElement.classList.add('webp');
+            } else {
+                document.documentElement.classList.add('no-webp');
+            }
+            
+            // Update CSS classes info
+            const cssClasses = document.documentElement.className;
+            document.getElementById('css-classes').textContent = cssClasses || 'none';
+            
+            // Check if background images loaded
+            const bgLoaded = document.querySelectorAll('.test-bg-1, .test-bg-2, .test-bg-3').length;
+            document.getElementById('bg-loaded').textContent = `${bgLoaded} background elements found`;
+            
+            // File sizes info
+            document.getElementById('file-sizes').textContent = 'Check Network tab in DevTools for actual sizes';
+        }
+        
+        // Run on page load
+        document.addEventListener('DOMContentLoaded', updatePageInfo);
+        
+        // Log WebP support for debugging
+        checkWebPSupport().then(support => {
+            console.log('WebP Support:', support);
+            console.log('CSS Classes:', document.documentElement.className);
+        });
+    </script>
+</body>
+</html>

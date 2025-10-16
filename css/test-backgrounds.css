@@ -1,0 +1,60 @@
+/* Test CSS for background images */
+
+/* Hero section */
+.hero {
+    padding: 60px 0 40px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background-image: url('../assets/images/Фон.png');
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+/* Media section */
+.media {
+    padding: 100px 0;
+    background: #0a0a0a url('../assets/images/mediaBg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+
+/* Contacts section */
+.contacts {
+    padding: 100px 0;
+    background: #0a0a0a url('../assets/images/contactsBg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+
+/* WebP support */
+html.webp .hero {
+    background-image: url('../assets/images/Фон.webp') !important;
+}
+
+html.webp .media {
+    background: #0a0a0a url('../assets/images/mediaBg.webp') !important;
+}
+
+html.webp .contacts {
+    background: #0a0a0a url('../assets/images/contactsBg.webp') !important;
+}
+
+/* Fallback for old browsers */
+html.no-webp .hero {
+    background-image: url('../assets/images/Фон.png') !important;
+}
+
+html.no-webp .media {
+    background: #0a0a0a url('../assets/images/mediaBg.png') !important;
+}
+
+html.no-webp .contacts {
+    background: #0a0a0a url('../assets/images/contactsBg.png') !important;
+}

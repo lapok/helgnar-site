@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Loading Debug - Helgnar Site</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .debug-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 9999;
+            max-width: 400px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #ff6b35;
+            border-radius: 10px;
+            background: #2a2a2a;
+        }
+        .test-bg {
+            width: 100%;
+            height: 200px;
+            border: 2px solid #fff;
+            margin: 10px 0;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+    </style>
+    
+    <!-- Load main CSS -->
+    <link rel="stylesheet" href="./css/style.css?v=1.1">
+</head>
+<body>
+    <div class="debug-info" id="debug-info">
+        <div><strong>CSS Loading:</strong> <span id="css-status">Checking...</span></div>
+        <div><strong>WebP Support:</strong> <span id="webp-status">Checking...</span></div>
+        <div><strong>HTML Classes:</strong> <span id="html-classes">-</span></div>
+        <div><strong>Hero Background:</strong> <span id="hero-bg">-</span></div>
+    </div>
+
+    <div class="test-section">
+        <h2>CSS Loading Test</h2>
+        <div id="css-rules-test">Loading...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Hero Section Test</h2>
+        <div class="hero test-bg">
+            <p>Hero background should be visible here</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Media Section Test</h2>
+        <div class="media test-bg">
+            <p>Media background should be visible here</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Contacts Section Test</h2>
+        <div class="contacts test-bg">
+            <p>Contacts background should be visible here</p>
+        </div>
+    </div>
+
+    <script>
+        // WebP detection
+        function checkWebPSupport() {
+            return new Promise((resolve) => {
+                const webP = new Image();
+                webP.onload = webP.onerror = () => {
+                    resolve(webP.height === 2);
+                };
+                webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
+            });
+        }
+        
+        // Check CSS loading
+        function checkCSSLoading() {
+            const testElement = document.createElement('div');
+            testElement.className = 'hero';
+            testElement.style.display = 'none';
+            document.body.appendChild(testElement);
+            
+            const computedStyle = window.getComputedStyle(testElement);
+            const hasBackground = computedStyle.backgroundImage !== 'none';
+            const hasPadding = computedStyle.padding !== '0px';
+            
+            document.body.removeChild(testElement);
+            
+            return {
+                hasBackground,
+                hasPadding,
+                backgroundImage: computedStyle.backgroundImage,
+                padding: computedStyle.padding
+            };
+        }
+        
+        // Update debug info
+        async function updateDebugInfo() {
+            // Check WebP support
+            const supportsWebP = await checkWebPSupport();
+            
+            if (supportsWebP) {
+                document.documentElement.classList.add('webp');
+                document.getElementById('webp-status').innerHTML = '<span class="success">✅ Supported</span>';
+            } else {
+                document.documentElement.classList.add('no-webp');
+                document.getElementById('webp-status').innerHTML = '<span class="warning">⚠️ Not Supported</span>';
+            }
+            
+            // Check CSS loading
+            const cssInfo = checkCSSLoading();
+            
+            if (cssInfo.hasBackground) {
+                document.getElementById('css-status').innerHTML = '<span class="success">✅ Loaded</span>';
+            } else {
+                document.getElementById('css-status').innerHTML = '<span class="error">❌ Not Loaded</span>';
+            }
+            
+            // Update other info
+            document.getElementById('html-classes').textContent = document.documentElement.className;
+            document.getElementById('hero-bg').textContent = cssInfo.backgroundImage;
+            
+            // CSS rules test
+            const cssRulesTest = document.getElementById('css-rules-test');
+            cssRulesTest.innerHTML = `
+                <strong>CSS Rules Test:</strong><br>
+                Background Image: ${cssInfo.backgroundImage}<br>
+                Padding: ${cssInfo.padding}<br>
+                Has Background: ${cssInfo.hasBackground ? '✅' : '❌'}<br>
+                Has Padding: ${cssInfo.hasPadding ? '✅' : '❌'}
+            `;
+            
+            // Check actual hero element
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                const heroStyle = window.getComputedStyle(hero);
+                console.log('Hero element styles:');
+                console.log('- Background Image:', heroStyle.backgroundImage);
+                console.log('- Background Size:', heroStyle.backgroundSize);
+                console.log('- Background Position:', heroStyle.backgroundPosition);
+                console.log('- Padding:', heroStyle.padding);
+                console.log('- Min Height:', heroStyle.minHeight);
+            }
+            
+            console.log('WebP Support:', supportsWebP);
+            console.log('HTML Classes:', document.documentElement.className);
+            console.log('CSS Info:', cssInfo);
+        }
+        
+        // Run on load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Wait a bit for CSS to load
+            setTimeout(updateDebugInfo, 100);
+        });
+        
+        // Also run after a longer delay
+        setTimeout(updateDebugInfo, 1000);
+    </script>
+</body>
+</html>
+

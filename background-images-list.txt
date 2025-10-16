@@ -1,0 +1,35 @@
+# Фоновые изображения для конвертации в WebP
+
+## Основные фоны:
+- assets/images/Фон.png (главный фон hero секции)
+- assets/images/1.2 ПО ЦЕНТРУ БЕЗ КРОВИ.png (фон about секции)
+- assets/images/БЕЗ ФИЛЬТРА ФИНАЛ.png (фон about секции)
+- assets/images/mediaBg.png (фон media секции)
+- assets/images/contactsBg.png (фон contacts секции)
+
+## Иконки и элементы:
+- assets/icons/Union.png (фон навигации)
+- assets/icons/Кнопка.svg (фон кнопки wishlist)
+- assets/icons/Черная подложка.svg (фон модального окна)
+- assets/icons/btnPlayVideo.svg (иконка воспроизведения)
+
+## После конвертации будут созданы:
+- assets/images/Фон.webp
+- assets/images/1.2 ПО ЦЕНТРУ БЕЗ КРОВИ.webp
+- assets/images/БЕЗ ФИЛЬТРА ФИНАЛ.webp
+- assets/images/mediaBg.webp
+- assets/images/contactsBg.webp
+
+## CSS классы для WebP:
+- .webp .hero - использует Фон.webp
+- .webp .about-bg-1 - использует 1.2 ПО ЦЕНТРУ БЕЗ КРОВИ.webp
+- .webp .about-bg-2 - использует БЕЗ ФИЛЬТРА ФИНАЛ.webp
+- .webp .media - использует mediaBg.webp
+- .webp .contacts - использует contactsBg.webp
+
+## Fallback классы:
+- .no-webp .hero - использует Фон.png
+- .no-webp .about-bg-1 - использует 1.2 ПО ЦЕНТРУ БЕЗ КРОВИ.png
+- .no-webp .about-bg-2 - использует БЕЗ ФИЛЬТРА ФИНАЛ.png
+- .no-webp .media - использует mediaBg.png
+- .no-webp .contacts - использует contactsBg.png

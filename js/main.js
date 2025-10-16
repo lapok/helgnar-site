@@ -481,15 +481,28 @@ function getSlideWidth() {
       // Добавляем класс для CSS fallback
       if (!supportsWebP) {
         document.documentElement.classList.add('no-webp');
+        console.log('WebP not supported, using PNG fallbacks');
       } else {
         document.documentElement.classList.add('webp');
+        console.log('WebP supported, using WebP images');
       }
+      
+      // Принудительно обновляем стили
+      document.documentElement.style.display = 'none';
+      document.documentElement.offsetHeight; // Trigger reflow
+      document.documentElement.style.display = '';
+    }).catch(error => {
+      console.error('WebP detection failed:', error);
+      // Fallback to no-webp
+      document.documentElement.classList.add('no-webp');
     });
   }
 
 
-  // Инициализация lazy loading
+  // Инициализация WebP поддержки как можно раньше
   preloadWebPSupport();
+  
+  // Инициализация lazy loading
   initLazyLoading();
   
 
@@ -984,6 +997,46 @@ function getSlideWidth() {
   
   const modalDotsElements = modalDots.querySelectorAll('.modal-slider-dot');
 
+  // Функция для принудительной загрузки всех изображений в модальном окне
+  async function preloadModalImages() {
+    const slideImagesArray = Array.from(slideImages);
+    
+    for (let i = 0; i < slideImagesArray.length; i++) {
+      const img = slideImagesArray[i];
+      const originalSrc = img.getAttribute('data-src');
+      
+      if (originalSrc && !img.src) {
+        try {
+          // Получаем оптимизированный источник
+          const optimizedSrc = await getOptimizedImageSrc(originalSrc);
+          
+          // Загружаем изображение
+          const newImg = new Image();
+          newImg.onload = () => {
+            img.src = optimizedSrc;
+            img.classList.add('loaded');
+          };
+          newImg.onerror = async () => {
+            // Если WebP не загрузился, пробуем оригинал
+            if (optimizedSrc !== originalSrc) {
+              const fallbackImg = new Image();
+              fallbackImg.onload = () => {
+                img.src = originalSrc;
+                img.classList.add('loaded');
+              };
+              fallbackImg.src = originalSrc;
+            }
+          };
+          newImg.src = optimizedSrc;
+        } catch (error) {
+          console.error('Error loading image:', error);
+          // Fallback к оригинальному источнику
+          img.src = originalSrc;
+        }
+      }
+    }
+  }
+
   function updateModalSlider() {
     const slideImagesArray = Array.from(slideImages);
     if (slideImagesArray[modalCurrentSlide]) {
@@ -1022,8 +1075,12 @@ function getSlideWidth() {
 
   // Open image modal when clicking on slide image (Открытие модального окна изображения при клике на слайд)
   slideImages.forEach((img, index) => {
-    img.addEventListener('click', () => {
+    img.addEventListener('click', async () => {
       modalCurrentSlide = index;
+      
+      // Принудительно загружаем все изображения для модального окна
+      await preloadModalImages();
+      
       updateModalSlider();
       imageModal.style.display = 'block';
       document.body.style.overflow = 'hidden'; // Prevent background scrolling (Предотвращение прокрутки фона)
